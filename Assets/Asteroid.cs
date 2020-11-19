@@ -6,6 +6,7 @@ public class Asteroid : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private GameObject explosionFx;
     private float health = 100f;
     void Start()
     {
@@ -26,6 +27,9 @@ public class Asteroid : MonoBehaviour
         if (health <= 0)
         {
             gameObject.SetActive(false);
+            var exp = Instantiate(explosionFx, transform.position, Quaternion.identity);
+            Destroy(exp, 1.0f);
+            LevelManager.Instance.AddScore();
         }
     }
 }

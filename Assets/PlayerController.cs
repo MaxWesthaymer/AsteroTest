@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private VariableJoystick joystick;
     [SerializeField] private float speed;
     [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform firePoint;
     private float screenWidthInWorldsUnits;
     private float screenHeightInWorldsUnits;
     private float playerHeightHalf;
@@ -17,15 +18,21 @@ public class PlayerController : MonoBehaviour
     private float cooldown;
     public IntReactiveProperty LivesCount {get; private set;}
     public BoolReactiveProperty IsDead {get; private set;}
-    void Start()
+
+    private void Awake()
     {
         LivesCount = new IntReactiveProperty(3);
         IsDead = new BoolReactiveProperty(false);
+    }
+
+    void Start()
+    {
         var mainCamera = Camera.main;
         screenWidthInWorldsUnits = mainCamera.aspect * mainCamera.orthographicSize;
         screenHeightInWorldsUnits = mainCamera.orthographicSize;
         playerHeightHalf = GetComponent<CapsuleCollider>().height / 2;
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -44,7 +51,7 @@ public class PlayerController : MonoBehaviour
         {
             if (cooldown <= 0)
             {
-                Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+                Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
                 cooldown = timeShoot;
             }
 

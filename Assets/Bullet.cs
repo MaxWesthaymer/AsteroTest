@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         damage = 25f;
+        Destroy(gameObject, 1.0f);
     }
 
     // Update is called once per frame
@@ -23,6 +24,7 @@ public class Bullet : MonoBehaviour
         if (other.CompareTag("Asteroid"))
         {
             other.GetComponent<Asteroid>()?.SetDamage(damage);
+            Destroy(gameObject);
         }
     }
 }

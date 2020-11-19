@@ -108,3 +108,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 7
   rotationSpeed: 80
+  explosionFx: {fileID: 180128, guid: 6586ff0f14125534cae2f5d8f04b7871, type: 3}
