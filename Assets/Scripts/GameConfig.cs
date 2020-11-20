@@ -1,65 +1,33 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using GameConstants;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Game Config", menuName = "GameConfig")]
 public class GameConfig : ScriptableObject
 {
-    public SpaceshipInfo[] SpaceshipInfos;
-    public ModuleInfo[] ModuleInfos;
-    public Category[] Categories;
+    [Space] [Header("Ship Config")]
+    public float ShipSpeed;
+    public float ShipFireRate;
+    public int ShipLivesCount;
+    
+    [Space] [Header("Levels Config")]
+    public int CountOfLevels;
+    public GameObject[] AsteroidsPrefabs;
+    public Vector2 AsteroidsSpeedRange;
+    public Vector2 AsteroidsSpawnTimeRange;
+    public Color[] AsteroidsColors;
+    public Vector2Int ScoreToWinRange;
+    public SpaceColor[] SpaceColors;
 }
 
 [Serializable]
-public class Category
+public class SpaceColor
 {
-    public Category(SubCategory[] subCategories, string name)
+    public SpaceColor(Color topColor, Color bottomColor)
     {
-        SubCategories = subCategories;
-        Name = name;
+        TopColor = topColor;
+        BottomColor = bottomColor;
     }
-    public string Name;
-    public SubCategory[] SubCategories;
-}
 
-[Serializable]
-public class SubCategory
-{
-    public SubCategory(ModuleType[] moduleTypes, string name)
-    {
-        ModuleTypes = moduleTypes;
-        Name = name;
-    }
-    public string Name;
-    public ModuleType[] ModuleTypes;
-}
-
-[Serializable]
-public class ModuleInfo
-{
-    public ModuleInfo(ModuleType moduleType, string name, GameObject prefab)
-    {
-        ModuleType = moduleType;
-        Name = name;
-        Prefab = prefab;
-    }
-    public ModuleType ModuleType;
-    public string Name;
-    public GameObject Prefab;
-}
-
-[Serializable]
-public class SpaceshipInfo
-{
-    public SpaceshipInfo(Sprite icon, string name, GameObject prefab)
-    {
-        Icon = icon;
-        Name = name;
-        Prefab = prefab;
-    }
-    public Sprite Icon;
-    public string Name;
-    public GameObject Prefab;
+    public Color TopColor;
+    public Color BottomColor;
 }

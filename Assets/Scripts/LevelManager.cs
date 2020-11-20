@@ -9,7 +9,10 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance;
     
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private SpawnController spawnController;
     [SerializeField] private LevelUI levelUi;
+    [SerializeField] private Material asteroidMaterial;
+    [SerializeField] private MeshRenderer back;
     public int scoreToWin = 10;
 
     private IntReactiveProperty score;
@@ -30,6 +33,16 @@ public class LevelManager : MonoBehaviour
     }
     void Start()
     {
+        var config = GameData.Instance.gameConfig;
+        var levelData = GameData.Instance.Data.levels[GameData.Instance.CurrentLevel];
+        
+        playerController.SetShipParameters(config.ShipSpeed, config.ShipFireRate, config.ShipLivesCount);
+        spawnController.SetSpawner(levelData.asteroidSpawnTime, config.AsteroidsPrefabs[levelData.asteroidId]);
+        
+        back.material.SetColor("_ColorMid", config.SpaceColors[levelData.spaceColorId].TopColor);
+        back.material.SetColor("_ColorTop", config.SpaceColors[levelData.spaceColorId].BottomColor);
+        asteroidMaterial.color = config.AsteroidsColors[levelData.asteroidColorId];
+        
         score = new IntReactiveProperty(0);
         _dLives = playerController.LivesCount.Subscribe(SetLivesInfo);
         _dIsDead = playerController.IsDead.Subscribe(SetGameOver);

@@ -7,34 +7,35 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private VariableJoystick joystick;
-    [SerializeField] private float speed;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
-    private float screenWidthInWorldsUnits;
-    private float screenHeightInWorldsUnits;
-    private float playerHeightHalf;
 
-    private float timeShoot = 0.1f;
-    private float cooldown;
+    private float _screenWidthInWorldsUnits;
+    private float _screenHeightInWorldsUnits;
+    private float _playerHeightHalf;
+    
+    private float _speed;
+    private float _fireRate;
+    private float _cooldown;
     public IntReactiveProperty LivesCount {get; private set;}
     public BoolReactiveProperty IsDead {get; private set;}
 
-    private void Awake()
+    public void SetShipParameters(float speed, float fireRate, int livesCount)
     {
-        LivesCount = new IntReactiveProperty(3);
+        _speed = speed;
+        _fireRate = fireRate;
+        LivesCount = new IntReactiveProperty(livesCount);
         IsDead = new BoolReactiveProperty(false);
     }
 
     void Start()
     {
         var mainCamera = Camera.main;
-        screenWidthInWorldsUnits = mainCamera.aspect * mainCamera.orthographicSize;
-        screenHeightInWorldsUnits = mainCamera.orthographicSize;
-        playerHeightHalf = GetComponent<CapsuleCollider>().height / 2;
+        _screenWidthInWorldsUnits = mainCamera.aspect * mainCamera.orthographicSize;
+        _screenHeightInWorldsUnits = mainCamera.orthographicSize;
+        _playerHeightHalf = GetComponent<CapsuleCollider>().height / 2;
     }
     
-
-    // Update is called once per frame
     void Update()
     {
         if (IsDead.Value)
@@ -42,25 +43,25 @@ public class PlayerController : MonoBehaviour
             return;
         }
         var input = new Vector3(joystick.Horizontal, joystick.Vertical, 0);
-        transform.position += input.normalized * speed * Time.deltaTime;
+        transform.position += input.normalized * _speed * Time.deltaTime;
         var currentPosition = transform.position;
-        transform.position = new Vector3(Mathf.Clamp(currentPosition.x, -screenWidthInWorldsUnits , screenWidthInWorldsUnits), 
-            Mathf.Clamp(currentPosition.y, -screenHeightInWorldsUnits + playerHeightHalf, screenHeightInWorldsUnits - playerHeightHalf),currentPosition.z);
+        transform.position = new Vector3(Mathf.Clamp(currentPosition.x, -_screenWidthInWorldsUnits , _screenWidthInWorldsUnits), 
+            Mathf.Clamp(currentPosition.y, -_screenHeightInWorldsUnits + _playerHeightHalf, _screenHeightInWorldsUnits - _playerHeightHalf),currentPosition.z);
 
         if (Input.GetMouseButton(0))
         {
-            if (cooldown <= 0)
+            if (_cooldown <= 0)
             {
                 Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-                cooldown = timeShoot;
+                _cooldown = _fireRate;
             }
 
-            cooldown -= Time.deltaTime;
+            _cooldown -= Time.deltaTime;
         }
         
         if (Input.GetMouseButtonUp(0))
         {
-            cooldown = 0;
+            _cooldown = 0;
         }
     }
 

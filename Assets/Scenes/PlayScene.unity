@@ -928,7 +928,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 1329176651}
+  spawnController: {fileID: 1859102672}
   levelUi: {fileID: 630766751}
+  asteroidMaterial: {fileID: 2100000, guid: 4561f1b7991e02342a82688dfe261dae, type: 2}
+  back: {fileID: 1209013228}
   scoreToWin: 10
 --- !u!4 &904604815
 Transform:
@@ -1624,7 +1627,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joystick: {fileID: 79125010}
-  speed: 10
   bulletPrefab: {fileID: 7851079049757220321, guid: da1f1a98f1843d443a327f2ba6b268ba,
     type: 3}
   firePoint: {fileID: 1205294588}
@@ -2092,7 +2094,7 @@ GameObject:
   - component: {fileID: 1859102673}
   - component: {fileID: 1859102672}
   m_Layer: 0
-  m_Name: AsteroidSpawner
+  m_Name: SpawnController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2110,9 +2112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e2b33d023bdca45a07fe490705d233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  asteroidPrefab: {fileID: 4868506947450598706, guid: b9320b05d6c070a4d8b0f7ac4e70f3fb,
-    type: 3}
-  secondsSpawns: 0.5
+  spawnRate: 0
 --- !u!4 &1859102673
 Transform:
   m_ObjectHideFlags: 0

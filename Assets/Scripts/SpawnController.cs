@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class SpawnController : MonoBehaviour
 {
-    [SerializeField] private GameObject asteroidPrefab;
+    private GameObject asteroidPrefab;
     private Vector2 screenHalfSizeInWorldUnits;
-    public float secondsSpawns = 0.5f;
+    public float spawnRate;
     private float time;
     void Start()
     {
         Camera mainCamera = Camera.main;
         screenHalfSizeInWorldUnits = new Vector2(mainCamera.aspect * mainCamera.orthographicSize, mainCamera.orthographicSize);
+    }
+
+    public void SetSpawner(float spawnTime, GameObject asteroid)
+    {
+        spawnRate = spawnTime;
+        asteroidPrefab = asteroid;
     }
 
     // Update is called once per frame
@@ -21,7 +27,7 @@ public class SpawnController : MonoBehaviour
         {
             Vector2 spawnPoint = new Vector2( Random.Range(-screenHalfSizeInWorldUnits.x, screenHalfSizeInWorldUnits.x), screenHalfSizeInWorldUnits.y + 1f);
             Instantiate(asteroidPrefab, spawnPoint, Quaternion.identity);
-            time = secondsSpawns;
+            time = spawnRate;
         }
         time -= Time.deltaTime;
     }

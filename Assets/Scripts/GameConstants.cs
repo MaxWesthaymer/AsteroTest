@@ -1,16 +1,9 @@
 ﻿
 namespace GameConstants
 {
-    public enum ModuleType
+    public enum LevelState
     {
-        LaserGun = 0,
-        MiniGun = 1,
-        BigGun = 2,
-        RocketLauncher = 3,
-        RailGun = 4,
-        MiniLaser = 5,
-        DoubleGun = 6,
-        LongGun = 7,
-        AutoGun = 8
+        CLOSED = 0,
+        OPEN = 1
     }
 }
