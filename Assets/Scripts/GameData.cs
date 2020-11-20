@@ -34,14 +34,20 @@ public class GameData : MonoBehaviour
     #endregion
 
     #region PublicMethods
-    public void Save()
-    {
-        SaveData(Data);
-    }
-    
+    public void Save() => SaveData(Data);
     public void SetCurrentLevel(int value)
     {
         CurrentLevel = value;
+    }
+    
+    public void OpenNextLevel()
+    {
+        var nextLevel = CurrentLevel + 1;
+        if (nextLevel < Data.levels.Count)
+        {
+            Data.levels[nextLevel].levelState = LevelState.OPEN;
+        }
+        Save();
     }
     #endregion
     

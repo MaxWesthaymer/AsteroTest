@@ -1,30 +1,34 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    #region InspectorFields
     [SerializeField] private float speed;
-    public float damage;
-    void Start()
+    #endregion
+    
+    #region PrivateFields
+    private float _damage;
+    #endregion
+    
+    #region UnityMethods
+    private void Start()
     {
-        damage = 25f;
+        _damage = GameData.Instance.gameConfig.ShipDamage;
         Destroy(gameObject, 1.0f);
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    private void Update()
     {
-        transform.position += Vector3.up * speed * Time.deltaTime;
+        transform.position += Vector3.up * (speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Asteroid"))
         {
-            other.GetComponent<Asteroid>()?.SetDamage(damage);
+            other.GetComponent<Asteroid>()?.SetDamage(_damage);
             Destroy(gameObject);
         }
     }
+    #endregion
 }

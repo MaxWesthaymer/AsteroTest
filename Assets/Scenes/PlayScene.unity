@@ -726,8 +726,8 @@ MonoBehaviour:
   endGameTitleTxt: {fileID: 26685304}
   levesTxt: {fileID: 1580105976}
   scoreTxt: {fileID: 283670670}
-  retryLevel: {fileID: 997141807}
-  leaveToMenu: {fileID: 1073818467}
+  retryLevelBtn: {fileID: 997141807}
+  leaveToMenuBtn: {fileID: 1073818467}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,7 +932,6 @@ MonoBehaviour:
   levelUi: {fileID: 630766751}
   asteroidMaterial: {fileID: 2100000, guid: 4561f1b7991e02342a82688dfe261dae, type: 2}
   back: {fileID: 1209013228}
-  scoreToWin: 10
 --- !u!4 &904604815
 Transform:
   m_ObjectHideFlags: 0
@@ -2112,7 +2111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e2b33d023bdca45a07fe490705d233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnRate: 0
 --- !u!4 &1859102673
 Transform:
   m_ObjectHideFlags: 0

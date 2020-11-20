@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9631f63257654604799050d0af3831f4, type: 3}
   m_Name: Game Config
   m_EditorClassIdentifier: 
-  ShipSpeed: 7
+  ShipSpeed: 10
   ShipFireRate: 0.1
   ShipLivesCount: 4
+  ShipDamage: 25
   CountOfLevels: 5
   AsteroidsPrefabs:
   - {fileID: 2187129181900784074, guid: 284d383320d68d447a0630c6562235ad, type: 3}

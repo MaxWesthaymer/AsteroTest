@@ -3,57 +3,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager Instance;
-    
     [SerializeField] private PlayerController playerController;
     [SerializeField] private SpawnController spawnController;
     [SerializeField] private LevelUI levelUi;
     [SerializeField] private Material asteroidMaterial;
     [SerializeField] private MeshRenderer back;
-    public int scoreToWin = 10;
-
-    private IntReactiveProperty score;
+    
+    private int _scoreToWin;
+    private IntReactiveProperty _score;
     private IDisposable _dLives;
     private IDisposable _dIsDead;
     private IDisposable _dScore;
     
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
     void Start()
     {
         var config = GameData.Instance.gameConfig;
         var levelData = GameData.Instance.Data.levels[GameData.Instance.CurrentLevel];
+
+        _scoreToWin = levelData.scoreToWin;
         
         playerController.SetShipParameters(config.ShipSpeed, config.ShipFireRate, config.ShipLivesCount);
-        spawnController.SetSpawner(levelData.asteroidSpawnTime, config.AsteroidsPrefabs[levelData.asteroidId]);
+        spawnController.SetSpawner(levelData.asteroidSpawnTime, levelData.asteroidSpeed, config.AsteroidsPrefabs[levelData.asteroidId], AddScore);
         
         back.material.SetColor("_ColorMid", config.SpaceColors[levelData.spaceColorId].TopColor);
         back.material.SetColor("_ColorTop", config.SpaceColors[levelData.spaceColorId].BottomColor);
         asteroidMaterial.color = config.AsteroidsColors[levelData.asteroidColorId];
         
-        score = new IntReactiveProperty(0);
+        _score = new IntReactiveProperty(0);
         _dLives = playerController.LivesCount.Subscribe(SetLivesInfo);
         _dIsDead = playerController.IsDead.Subscribe(SetGameOver);
-        _dScore = score.Subscribe(SetScoreInfo);
+        _dScore = _score.Subscribe(SetScoreInfo);
     }
 
-    public void AddScore()
+    private void AddScore()
     {
-        score.Value++;
+        _score.Value++;
 
-        if (score.Value >= 10)
+        if (_score.Value >= _scoreToWin)
         {
             SetWin();
         }
@@ -66,21 +56,25 @@ public class LevelManager : MonoBehaviour
     
     private void SetScoreInfo(int value)
     {
-        levelUi.UpdateScoreInfo(value, scoreToWin);
+        levelUi.UpdateScoreInfo(value, _scoreToWin);
     }
     
     private void SetGameOver(bool value)
     {
         if (value)
         {
-            levelUi.ShowEndGamePanel(false);
+            levelUi.ShowEndGamePanel(false, LeaveToMenu, ReloadLevel);
         }
     }
     
     private void SetWin()
     {
-        levelUi.ShowEndGamePanel(true);
+        GameData.Instance.OpenNextLevel();
+        playerController.SetEndGame();
+        levelUi.ShowEndGamePanel(true, LeaveToMenu, ReloadLevel);
     }
+    private void LeaveToMenu() => SceneManager.LoadScene(0);
+    private void ReloadLevel() => SceneManager.LoadScene(1);
 
     private void OnDestroy()
     {

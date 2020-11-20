@@ -8,6 +8,7 @@ public class GameConfig : ScriptableObject
     public float ShipSpeed;
     public float ShipFireRate;
     public int ShipLivesCount;
+    public int ShipDamage;
     
     [Space] [Header("Levels Config")]
     public int CountOfLevels;

@@ -1,34 +1,56 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpawnController : MonoBehaviour
 {
-    private GameObject asteroidPrefab;
-    private Vector2 screenHalfSizeInWorldUnits;
-    public float spawnRate;
-    private float time;
-    void Start()
+    #region PrivateFields
+    private GameObject _asteroidPrefab;
+    private Vector2 _screenHalfSizeInWorldUnits;
+    private float _spawnRate;
+    private float _cooldown;
+    private Action _asteroidDeath;
+    private float _asteroidSpeed;
+    #endregion
+
+    #region PublickMethods
+    public void SetSpawner(float spawnTime,float asteroidSpeed, GameObject asteroid, Action asteroidDeath)
+    {
+        _spawnRate = spawnTime;
+        _asteroidPrefab = asteroid;
+        _asteroidDeath = asteroidDeath;
+        _asteroidSpeed = asteroidSpeed;
+    }
+    #endregion
+    
+    #region UnityMethods
+    private void Start()
+    {
+        CalculateScreenSize();
+    }
+    
+    private void Update()
+    {
+        if (_cooldown <= 0)
+        {
+            InstantiateAsteroid();
+            _cooldown = _spawnRate;
+        }
+        _cooldown -= Time.deltaTime;
+    }
+    #endregion
+
+    #region PrivateMethods
+    private void CalculateScreenSize()
     {
         Camera mainCamera = Camera.main;
-        screenHalfSizeInWorldUnits = new Vector2(mainCamera.aspect * mainCamera.orthographicSize, mainCamera.orthographicSize);
+        _screenHalfSizeInWorldUnits = new Vector2(mainCamera.aspect * mainCamera.orthographicSize, mainCamera.orthographicSize);
     }
-
-    public void SetSpawner(float spawnTime, GameObject asteroid)
+    private void InstantiateAsteroid()
     {
-        spawnRate = spawnTime;
-        asteroidPrefab = asteroid;
+        Vector2 spawnPoint = new Vector2( Random.Range(-_screenHalfSizeInWorldUnits.x, _screenHalfSizeInWorldUnits.x), _screenHalfSizeInWorldUnits.y + 1f);
+        var asteroid = Instantiate(_asteroidPrefab, spawnPoint, Quaternion.identity);
+        asteroid.GetComponent<Asteroid>().SetAsteroid(_asteroidSpeed, _asteroidDeath);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (time <= 0)
-        {
-            Vector2 spawnPoint = new Vector2( Random.Range(-screenHalfSizeInWorldUnits.x, screenHalfSizeInWorldUnits.x), screenHalfSizeInWorldUnits.y + 1f);
-            Instantiate(asteroidPrefab, spawnPoint, Quaternion.identity);
-            time = spawnRate;
-        }
-        time -= Time.deltaTime;
-    }
+    #endregion
 }
