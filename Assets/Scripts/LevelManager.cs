@@ -1,25 +1,44 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    #region InspectorFields
     [SerializeField] private PlayerController playerController;
     [SerializeField] private SpawnController spawnController;
     [SerializeField] private LevelUI levelUi;
     [SerializeField] private Material asteroidMaterial;
     [SerializeField] private MeshRenderer back;
-    
+    #endregion
+
+    #region PrivateFields
     private int _scoreToWin;
     private IntReactiveProperty _score;
     private IDisposable _dLives;
     private IDisposable _dIsDead;
     private IDisposable _dScore;
+    #endregion
     
+    #region UnityMethods
     void Start()
+    {
+        FillLevel();
+        _score = new IntReactiveProperty(0);
+        ReactiveSubscribe();
+    }
+    
+    private void OnDestroy()
+    {
+        _dLives?.Dispose();
+        _dIsDead?.Dispose();
+        _dScore?.Dispose();
+    }
+    #endregion
+
+    #region PrivateMethods
+    private void FillLevel()
     {
         var config = GameData.Instance.gameConfig;
         var levelData = GameData.Instance.Data.levels[GameData.Instance.CurrentLevel];
@@ -32,13 +51,13 @@ public class LevelManager : MonoBehaviour
         back.material.SetColor("_ColorMid", config.SpaceColors[levelData.spaceColorId].TopColor);
         back.material.SetColor("_ColorTop", config.SpaceColors[levelData.spaceColorId].BottomColor);
         asteroidMaterial.color = config.AsteroidsColors[levelData.asteroidColorId];
-        
-        _score = new IntReactiveProperty(0);
+    }
+    private void ReactiveSubscribe()
+    {
         _dLives = playerController.LivesCount.Subscribe(SetLivesInfo);
         _dIsDead = playerController.IsDead.Subscribe(SetGameOver);
         _dScore = _score.Subscribe(SetScoreInfo);
     }
-
     private void AddScore()
     {
         _score.Value++;
@@ -48,7 +67,6 @@ public class LevelManager : MonoBehaviour
             SetWin();
         }
     }
-
     private void SetLivesInfo(int value)
     {
         levelUi.UpdateLevesInfo(value);
@@ -58,7 +76,6 @@ public class LevelManager : MonoBehaviour
     {
         levelUi.UpdateScoreInfo(value, _scoreToWin);
     }
-    
     private void SetGameOver(bool value)
     {
         if (value)
@@ -66,7 +83,6 @@ public class LevelManager : MonoBehaviour
             levelUi.ShowEndGamePanel(false, LeaveToMenu, ReloadLevel);
         }
     }
-    
     private void SetWin()
     {
         GameData.Instance.OpenNextLevel();
@@ -75,11 +91,5 @@ public class LevelManager : MonoBehaviour
     }
     private void LeaveToMenu() => SceneManager.LoadScene(0);
     private void ReloadLevel() => SceneManager.LoadScene(1);
-
-    private void OnDestroy()
-    {
-        _dLives?.Dispose();
-        _dIsDead?.Dispose();
-        _dScore?.Dispose();
-    }
+    #endregion
 }

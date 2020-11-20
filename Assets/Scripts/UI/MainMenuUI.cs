@@ -32,8 +32,8 @@ public class MainMenuUI : MonoBehaviour
             var levelBtn = Instantiate(levelButtonPrefab);
             levelBtn.transform.parent = buttonsContainer;
             levelBtn.transform.localScale = Vector3.one;
-            var isLocked = GameData.Instance.Data.levels[levelId].levelState == LevelState.CLOSED;
-            levelBtn.SetupLevelButton(levelId, isLocked, LoadBuildingLevel);
+            var state = GameData.Instance.Data.levels[levelId].levelState;
+            levelBtn.SetupLevelButton(levelId, state, LoadBuildingLevel);
         }
     }
     #endregion

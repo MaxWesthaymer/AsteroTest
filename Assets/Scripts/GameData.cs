@@ -39,11 +39,12 @@ public class GameData : MonoBehaviour
     {
         CurrentLevel = value;
     }
-    
+
     public void OpenNextLevel()
     {
+        Data.levels[CurrentLevel].levelState = LevelState.COMPLETE;
         var nextLevel = CurrentLevel + 1;
-        if (nextLevel < Data.levels.Count)
+        if (nextLevel < Data.levels.Count && Data.levels[nextLevel].levelState == LevelState.CLOSED)
         {
             Data.levels[nextLevel].levelState = LevelState.OPEN;
         }
